@@ -9,6 +9,7 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/library", label: "Library" },
+  { href: "/community", label: "Community" },
   { href: "/my-library", label: "My Library" },
   { href: "/settings", label: "Settings" },
 ];

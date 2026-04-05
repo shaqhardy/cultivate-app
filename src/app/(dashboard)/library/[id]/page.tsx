@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { BookmarkButton } from "./bookmark-button";
+import { CommentForm } from "@/components/community/comment-form";
+import { CommentList } from "@/components/community/comment-list";
 
 export default async function ContentDetailPage(props: {
   params: Promise<{ id: string }>;
@@ -130,7 +132,51 @@ export default async function ContentDetailPage(props: {
               ))}
             </div>
           )}
+
+          {/* Comments */}
+          <ContentComments contentId={id} userId={user!.id} isAdmin={profile?.role === "admin"} />
         </div>
+      )}
+    </div>
+  );
+}
+
+async function ContentComments({
+  contentId,
+  userId,
+  isAdmin,
+}: {
+  contentId: string;
+  userId: string;
+  isAdmin: boolean;
+}) {
+  const supabase = await createClient();
+
+  const { data: comments } = await supabase
+    .from("comments")
+    .select("*, profiles(full_name, email)")
+    .eq("content_id", contentId)
+    .order("created_at", { ascending: true });
+
+  return (
+    <div className="mt-10 pt-8 border-t border-stone/20">
+      <h2 className="font-display text-xl text-cream uppercase mb-4">
+        Discussion ({comments?.length || 0})
+      </h2>
+      <div className="mb-6">
+        <CommentForm
+          contentId={contentId}
+          userId={userId}
+          placeholder="Share your thoughts on this..."
+        />
+      </div>
+      {comments && comments.length > 0 && (
+        <CommentList
+          comments={comments as never[]}
+          contentId={contentId}
+          userId={userId}
+          isAdmin={isAdmin}
+        />
       )}
     </div>
   );
