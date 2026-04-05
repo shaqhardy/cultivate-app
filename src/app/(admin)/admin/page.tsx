@@ -23,6 +23,17 @@ export default async function AdminDashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("role", "paid_member");
 
+  const { count: totalEvents } = await supabase
+    .from("events")
+    .select("*", { count: "exact", head: true });
+
+  const today = new Date().toISOString().split("T")[0];
+  const { count: upcomingEvents } = await supabase
+    .from("events")
+    .select("*", { count: "exact", head: true })
+    .gte("event_date", today)
+    .not("stage", "in", '("canceled","completed")');
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -35,7 +46,7 @@ export default async function AdminDashboardPage() {
         </Link>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <p className="text-sm text-stone mb-1">Total Content</p>
           <p className="text-3xl font-display text-cream">{totalContent ?? 0}</p>
@@ -51,6 +62,14 @@ export default async function AdminDashboardPage() {
         <Card>
           <p className="text-sm text-stone mb-1">Paid Members</p>
           <p className="text-3xl font-display text-terracotta">{paidMembers ?? 0}</p>
+        </Card>
+        <Card>
+          <p className="text-sm text-stone mb-1">Total Events</p>
+          <p className="text-3xl font-display text-cream">{totalEvents ?? 0}</p>
+        </Card>
+        <Card>
+          <p className="text-sm text-stone mb-1">Upcoming Events</p>
+          <p className="text-3xl font-display text-terracotta">{upcomingEvents ?? 0}</p>
         </Card>
       </div>
     </div>

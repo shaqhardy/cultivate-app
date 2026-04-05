@@ -46,6 +46,24 @@ export default async function AdminLayout({
             Content
           </Link>
           <Link
+            href="/admin/bookings"
+            className="text-sm text-stone hover:text-cream transition-colors"
+          >
+            Bookings
+          </Link>
+          <Link
+            href="/admin/products"
+            className="text-sm text-stone hover:text-cream transition-colors"
+          >
+            Products
+          </Link>
+          <Link
+            href="/admin/orders"
+            className="text-sm text-stone hover:text-cream transition-colors"
+          >
+            Orders
+          </Link>
+          <Link
             href="/library"
             className="text-sm text-stone hover:text-cream transition-colors"
           >
